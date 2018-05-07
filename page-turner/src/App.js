@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import leftArrow from './static/leftArrow.svg';
+import rightArrow from './static/rightArrow.svg';
+
 class App extends Component {
 
   constructor(props) {
@@ -10,20 +13,71 @@ class App extends Component {
     this.renderAllPages = this.renderAllPages.bind(this);
     this.nextPageAnimation = this.nextPageAnimation.bind(this);
     this.lastPageAnimation = this.lastPageAnimation.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+    this.clearTimeout = this.clearTimeout.bind(this);
   }
-
+  timeout = null
   state= { currentLeftIndex: 1, totalPages: 4 }
 
-  render() {
+  scrollJumpDistance = 0;
 
-    
+  componentDidMount() {
+    //var doc = document.getElementById('contentInner')
+    window.addEventListener('wheel', this.handleScroll);
+
+    var scrollWidth = document.getElementById('footerScroll').offsetWidth;
+    //Minus 44 so that the two direction arrows are not counted
+    var fullWidth = scrollWidth - 44;
+    this.scrollJumpDistance = fullWidth / 4;
+    console.log('Scroll Jump Distance = ' + this.scrollJumpDistance);
+
+  }
+
+  componentWillUnmount() {
+      //var doc = document.getElementById('contentInner')
+      window.removeEventListener('wheel', this.handleScroll);
+  }
+
+  handleScroll(event) {
+      if (this.timeout === null) {
+        var scroll = document.getElementById('footerScrollBar');
+        var currentLeft = scroll.offsetLeft;
+        var scrollBar = document.getElementById("footerScrollBar");
+        //Check scroll direction
+        if(event.deltaY === 100)
+        {
+          this.nextPageAnimation();
+          scrollBar.style.left = `${currentLeft + this.scrollJumpDistance}px`;
+          console.log(this.scrollJumpDistance);
+        }
+        else if(event.deltaY === -100)
+        {
+          this.lastPageAnimation();
+          scrollBar.style.left = currentLeft - this.scrollJumpDistance;
+          scrollBar.style.left = `${currentLeft - this.scrollJumpDistance}px`;
+          console.log(this.scrollJumpDistance);
+        }
+        //set timeout to allow animation to complete
+        this.timeout = setTimeout(this.clearTimeout, 1000);
+        console.log(event.deltaY);
+      }
+  }
+
+  clearTimeout() {
+    this.timeout = null;
+  }
+
+  render() {    
 
     return (
       <div className="App">
-          <button onClick={this.lastPageAnimation}>-</button>
-          <button onClick={this.nextPageAnimation}>+</button>
           <div className="centerDiv">
             { this.renderAllPages() }
+          </div>
+          <div id="footerScroll">
+            <div id="footerLeftArrow"><img id="leftScrollArrow" className="scrollArrow" src={leftArrow} /></div>
+            <div id="footerScrollBar"></div>
+            <div id="footerRightArrow"><img id="rightScrollArrow" className="scrollArrow" src={rightArrow} /></div>
           </div>
       </div>
     );

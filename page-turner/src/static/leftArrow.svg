@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 28 41">
+  <defs>
+    <style>
+      .cls-1 {
+        clip-path: url(#clip-play_button);
+      }
+    </style>
+    <clipPath id="clip-play_button">
+      <rect width="28" height="41"/>
+    </clipPath>
+  </defs>
+  <g id="play_button" data-name="play button" class="cls-1">
+    <path id="play-button" d="M32.936,18.109,6.907.158A.9.9,0,0,0,5.5.9V36.8a.9.9,0,0,0,1.407.739L32.936,19.586a.9.9,0,0,0,0-1.477Z" transform="translate(33.324 39.696) rotate(180)"/>
+  </g>
+</svg>
