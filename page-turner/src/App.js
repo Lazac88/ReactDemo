@@ -14,10 +14,12 @@ class App extends Component {
     this.nextPageAnimation = this.nextPageAnimation.bind(this);
     this.lastPageAnimation = this.lastPageAnimation.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.rightScrollAnimation = this.rightScrollAnimation.bind(this);
+    this.leftScrollAnimation = this.leftScrollAnimation.bind(this);
     this.clearTimeout = this.clearTimeout.bind(this);
   }
   timeout = null
-  state= { currentLeftIndex: 1, totalPages: 4 }
+  state= { currentLeftIndex: 1, totalPages: 8 }
 
   scrollJumpDistance = 0;
 
@@ -28,8 +30,10 @@ class App extends Component {
     var scrollWidth = document.getElementById('footerScroll').offsetWidth;
     //Minus 44 so that the two direction arrows are not counted
     var fullWidth = scrollWidth - 44;
-    this.scrollJumpDistance = fullWidth / 4;
+    this.scrollJumpDistance = fullWidth / (this.state.totalPages - 1);
     console.log('Scroll Jump Distance = ' + this.scrollJumpDistance);
+    var scrollBar = document.getElementById("footerScrollBar");
+    scrollBar.style.width = `${this.scrollJumpDistance}px`;
 
   }
 
@@ -39,23 +43,17 @@ class App extends Component {
   }
 
   handleScroll(event) {
-      if (this.timeout === null) {
-        var scroll = document.getElementById('footerScrollBar');
-        var currentLeft = scroll.offsetLeft;
-        var scrollBar = document.getElementById("footerScrollBar");
+      if (this.timeout === null) {        
         //Check scroll direction
         if(event.deltaY === 100)
         {
           this.nextPageAnimation();
-          scrollBar.style.left = `${currentLeft + this.scrollJumpDistance}px`;
-          console.log(this.scrollJumpDistance);
+          this.rightScrollAnimation();
         }
         else if(event.deltaY === -100)
         {
           this.lastPageAnimation();
-          scrollBar.style.left = currentLeft - this.scrollJumpDistance;
-          scrollBar.style.left = `${currentLeft - this.scrollJumpDistance}px`;
-          console.log(this.scrollJumpDistance);
+          this.leftScrollAnimation()
         }
         //set timeout to allow animation to complete
         this.timeout = setTimeout(this.clearTimeout, 1000);
@@ -81,6 +79,30 @@ class App extends Component {
           </div>
       </div>
     );
+  }
+
+  leftScrollAnimation()
+  {
+    //Check that the current page is not the first page
+    if(this.state.currentLeftIndex !== 1)
+    {
+      var scrollBar = document.getElementById('footerScrollBar');
+      var currentLeft = scrollBar.offsetLeft;
+
+      scrollBar.style.left = `${currentLeft - this.scrollJumpDistance}px`;
+      console.log(this.scrollJumpDistance);
+    }
+  }
+
+  rightScrollAnimation()
+  {
+    if (this.state.currentLeftIndex + 1 !== this.state.totalPages)
+    {
+      var scrollBar = document.getElementById('footerScrollBar');
+      var currentLeft = scrollBar.offsetLeft;
+      scrollBar.style.left = `${currentLeft + this.scrollJumpDistance}px`;
+      console.log(this.scrollJumpDistance);
+    }
   }
 
   nextPageAnimation()
@@ -148,19 +170,36 @@ class App extends Component {
 
   renderAllPages()
   {
-    var leftBottomIndex = this.state.currentLeftIndex - 1;
-    var leftTopIndex = this.state.currentLeftIndex;
-    var rightTopIndex = this.state.currentLeftIndex + 1;
-    var rightBottomIndex = this.state.currentLeftIndex + 2;
+    var pageArray = [];
+    for(var pageNumber = 1; pageNumber <= this.state.totalPages; pageNumber++)
+    {
+      if(pageNumber < this.state.currentLeftIndex - 1)
+      {
+        pageArray.push(<div className="page leftStackPage">{this.getPage(pageNumber)}</div>);
+      }
+      else if(pageNumber === this.state.currentLeftIndex - 1)
+      {
+        pageArray.push(<div className="page leftBottom">{this.getPage(pageNumber)}</div>);
+      }
+      else if(pageNumber === this.state.currentLeftIndex)
+      {
+        pageArray.push(<div className="page leftTop">{this.getPage(pageNumber)}</div>);
+      }
+      else if(pageNumber === this.state.currentLeftIndex + 1)
+      {
+        pageArray.push(<div className="page rightTop">{this.getPage(pageNumber)}</div>);
+      }
+      else if(pageNumber === this.state.currentLeftIndex + 2)
+      {
+        pageArray.push(<div className="page rightBottom">{this.getPage(pageNumber)}</div>);
+      }
+      else
+      {
+        pageArray.push(<div className="page rightStackPage">{this.getPage(pageNumber)}</div>);
+      }
+    }
 
-    return (
-          <div>
-            <div className="page leftBottom">{ this.getPage(leftBottomIndex) }</div>
-            <div className="page leftTop">{ this.getPage(leftTopIndex) }</div>
-            <div className="page rightTop">{ this.getPage(rightTopIndex) }</div>
-            <div className="page rightBottom">{ this.getPage(rightBottomIndex) }</div>
-          </div>
-          )  
+    return pageArray;
   }
 
   getPage(pageId)
@@ -186,6 +225,26 @@ class App extends Component {
         //Page 3
         return(
           <div className="whiteBackground"><h1>Page3</h1></div>
+        );
+      case 5:
+        //Page 4
+        return(
+          <div className="whiteBackground"><h1>Page4</h1></div>
+        );
+      case 6:
+        //Page 5
+        return(
+          <div className="whiteBackground"><h1>Page5</h1></div>
+        );
+      case 7:
+        //Page 6
+        return(
+          <div className="whiteBackground"><h1>Page6</h1></div>
+        );
+      case 8:
+        //Page 7
+        return(
+          <div className="whiteBackground"><h1>Page7</h1></div>
         );
       default: return null;        
     }

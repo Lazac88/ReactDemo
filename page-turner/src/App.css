@@ -34,12 +34,20 @@
   background-color: transparent;
 }
 
-.page.leftBottom
+.page.leftStackPage
 {
   height: 960px;
   left: 0;
   top: 20px;
   z-index: 1;
+}
+
+.page.leftBottom
+{
+  height: 960px;
+  left: 0;
+  top: 20px;
+  z-index: 2;
 }
 
 .page.leftBottom.expand
@@ -89,6 +97,14 @@
 .page.rightBottom
 {
   height: 960px;
+  z-index: 2;
+  right: 0;
+  top: 20px;
+}
+
+.page.rightStackPage
+{
+  height: 960px;
   z-index: 1;
   right: 0;
   top: 20px;
@@ -123,9 +139,6 @@
   height: 18px;
   width: 20px;
   background-color: #999999;
-  /*background-image: url("./static/leftArrow.svg");
-  background-repeat: no-repeat;
-  background-position: center;*/
 }
 
 #footerScrollBar
@@ -146,9 +159,6 @@
   height: 18px;
   width: 20px;
   background-color: #999999;
-  /*background-image: url("./static/rightArrow.svg");
-  background-repeat: no-repeat;
-  background-position: center;*/
 }
 
 #rightScrollArrow
